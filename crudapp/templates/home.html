@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class='row'>
+        <div class='col-sm-4'>
+            <h4 class='alert alert-info text-center'>Add New Student</h4>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            
+            <form action="" method="post" novalidate>
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Add Student" class='btn btn-success btn-block'>
+            </form>
+        </div>
+
+        <div class='col-sm-7 offset-1'>
+            <h4 class='alert alert-info text-center'>Show Student Information</h4>
+            {% if stu %}
+                <table class='table table-hover'>
+                    <thead class='text-center'>
+                        <tr>
+                            <th>ID</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>PASSWORD</th>
+                            <th>ACTION</th>
+                        </tr>
+                        {% for st in stu %}
+                        <tr>
+                            <td scope='row'>{{st.id}}</td>
+                            <td>{{st.name}}</td>
+                            <td>{{st.email}}</td>
+                            <td>{{st.password}}</td>
+                            <td>
+                                <a href="{% url 'updatedata' st.id %}" class='btn btn-warning btn-sm'>Edit</a>
+                                {% comment %} <a href="" class='btn btn-danger btn-sm'>Detete</a> {% endcomment %}
+                                
+                                <form action=" {% url 'deletedata' st.id %} " method="POST" class='d-inline'>
+                                {% csrf_token %}
+                                    <input onclick="return confirm('Are you sure want to delete this user?');" type="submit" class ='btn btn-danger btn-sm' value="Delete">
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </thead>
+                </table>
+            {% else %}
+                <h5>Database Empty</h5>
+            {% endif %}
+        </div>
+    
+    </div>
+    
+{% endblock content %}
+
+
+{% comment %} {% if stu %}
+    <h5>Data</h5>
+{% else %}
+    <h5>No Data</h5>
+{% endif %} {% endcomment %}
